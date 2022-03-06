@@ -1,0 +1,1 @@
+#include <fstream>using namespace std;int a,b,r;int main(){    ifstream in("cmmdc.in");    ofstream out("cmmdc.out");    in>>a>>b;    while(b)    {        r=a%b;        a=b;        b=r;    }    if(a==1) out<<0;    else out<<a;}

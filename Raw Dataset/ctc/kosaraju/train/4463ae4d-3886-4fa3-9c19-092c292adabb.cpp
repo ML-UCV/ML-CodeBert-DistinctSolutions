@@ -1,0 +1,252 @@
+#include <fstream>
+
+
+const int NMAX = 100000;
+
+
+
+using namespace std;
+
+
+
+ifstream in("ctc.in");
+
+
+
+ofstream out("ctc.out");
+
+
+
+struct nod
+
+{
+
+
+
+    int x;
+
+
+
+    nod* next;
+
+
+
+};
+
+
+
+
+
+
+
+nod* G[NMAX + 1];
+
+nod* GT[NMAX + 1];
+
+nod* CTC[NMAX + 1];
+
+
+
+int N, M, nrc, nr, post[NMAX + 1];
+
+
+
+bool viz[NMAX + 1];
+
+
+
+void add(nod*& cap_lst, int nod_add)
+
+{
+
+
+
+    nod* p;
+
+
+
+    p = new nod;
+
+
+
+    p->x = nod_add;
+
+
+
+    p->next = cap_lst;
+
+
+
+    cap_lst = p;
+
+
+
+}
+
+
+
+void citire()
+
+{
+
+    in >> N >> M;
+
+
+
+    for(int i = 1 ; i <= M ; i ++)
+
+    {
+
+        int x, y;
+
+
+
+        in >> x >> y;
+
+
+
+        add(G[x], y);
+
+        add(GT[y], x);
+
+    }
+
+}
+
+
+
+void DFS(int vf)
+
+{
+
+    viz[vf] = 1;
+
+
+
+    for(nod* p = G[vf] ; p != NULL ; p = p -> next)
+
+        if(!viz[p->x])
+
+            DFS(p->x);
+
+
+
+    post[++nr] = vf;
+
+}
+
+
+
+
+
+void DFSt(int vf)
+
+{
+
+
+
+    viz[vf] = 0;
+
+
+
+    add(CTC[nrc], vf);
+
+
+
+    for (nod* p = GT[vf]; p != NULL; p = p->next)
+
+
+
+        if (viz[p->x])
+
+
+
+            DFSt(p->x);
+
+
+
+}
+
+
+
+void rez()
+
+{
+
+    for(int i = 1 ; i <= N ; i++)
+
+        if(!viz[i])
+
+            DFS(i);
+
+
+
+    for(int i = N ; i >= 1 ; i--)
+
+        if(viz[post[i]])
+
+        {
+
+            nrc++;
+
+            DFSt(post[i]);
+
+        }
+
+}
+
+
+
+
+
+void afis() {
+
+
+
+    out << nrc << '\n';
+
+
+
+    for (int i = 1; i <= nrc; i++) {
+
+
+
+        for (nod* p = CTC[i]; p != NULL; p = p->next)
+
+
+
+            out << p->x << ' ';
+
+
+
+        out << '\n';
+
+
+
+    }
+
+
+
+}
+
+
+
+int main()
+
+{
+
+    citire();
+
+
+
+    rez();
+
+
+
+    afis();
+
+
+
+    return 0;
+
+}
